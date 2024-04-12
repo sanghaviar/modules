@@ -11,11 +11,13 @@ resource "aws_kms_key" "kms_key" {
 }
 
 resource "aws_kms_alias" "kms_name" {
+  depends_on = [aws_kms_key.kms_key]
   name = var.config["description_name"]
   target_key_id = aws_kms_key.kms_key.key_id
 }
 
 resource "aws_kms_key_policy" "key_policy" {
+  depends_on = [aws_kms_key.kms_key]
   key_id = aws_kms_key.kms_key.id
   policy = jsonencode(jsondecode(file("config/${var.config["kms_policy_filename"]}")))
 }

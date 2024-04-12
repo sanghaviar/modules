@@ -15,6 +15,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "private_subnet" {
+  depends_on = [aws_vpc.vpc]
   vpc_id = aws_vpc.vpc.id
   count   = length(var.config["subnets"]["private_subnet_cidr_block"])
   cidr_block = var.config["subnets"]["private_subnet_cidr_block"][count.index]
@@ -24,6 +25,7 @@ resource "aws_subnet" "private_subnet" {
 }
 
 resource "aws_subnet" "public_subnet" {
+  depends_on = [aws_vpc.vpc]
   vpc_id = aws_vpc.vpc.id
   count   = length(var.config["subnets"]["public_subnet_cidr_block"])
   cidr_block = var.config["subnets"]["public_subnet_cidr_block"][count.index]
@@ -33,16 +35,19 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
+  depends_on = [aws_vpc.vpc]
   vpc_id = aws_vpc.vpc.id
   tags = lookup(var.config,"internet_gateway_tags",{})
 }
 resource "aws_security_group" "security_group" {
+  depends_on = [aws_vpc.vpc]
   name        = var.config["security_group_name"]
   vpc_id      = aws_vpc.vpc.id
   tags = lookup(var.config,"security_group_tags",{} )
 }
 
 resource "databricks_mws_networks" "mws_networks" {
+  depends_on = [aws_vpc.vpc,aws_security_group.security_group]
   account_id   = var.ACCOUNT_ID
   network_name = var.config["network_name"]
   vpc_id = aws_vpc.vpc.id
@@ -62,6 +67,7 @@ resource "databricks_mws_storage_configurations" "storage_configurations" {
 }
 
 resource "databricks_mws_workspaces" "workspace" {
+  depends_on = [databricks_mws_credentials.credentials,databricks_mws_storage_configurations.storage_configurations,databricks_mws_networks.mws_networks]
   account_id     = var.ACCOUNT_ID
   aws_region     = var.region
   workspace_name = var.config["db_workspacename"]
@@ -78,11 +84,13 @@ resource "databricks_metastore" "DBmetastore" {
 }
 
 resource "databricks_metastore_assignment" "metastore_assignment" {
+  depends_on = [databricks_metastore.DBmetastore,databricks_mws_workspaces.workspace]
   metastore_id = databricks_metastore.DBmetastore.id
   workspace_id = databricks_mws_workspaces.workspace.workspace_id
 }
 
 resource "databricks_metastore_data_access" "data_access" {
+  depends_on = [databricks_metastore.DBmetastore]
   metastore_id = databricks_metastore.DBmetastore.id
   name         = data.aws_iam_role.this.name
   aws_iam_role {
