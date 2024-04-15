@@ -60,7 +60,6 @@ resource "databricks_mws_networks" "mws_networks" {
   security_group_ids = [aws_security_group.security_group.id]
 }
 resource "databricks_mws_credentials" "credentials" {
-  depends_on = [data.aws_iam_role]
   credentials_name = var.config["mws_credential_name"]
   role_arn = data.aws_iam_role.this.arn
   account_id       = var.ACCOUNT_ID
