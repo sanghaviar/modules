@@ -5,8 +5,12 @@ data "databricks_aws_assume_role_policy" "assume_role_policy" {
 data "databricks_aws_crossaccount_policy" "aws_crossaccount_policy" {
 }
 
+#data "aws_s3_bucket_policy" "bucket_policy"{
+#  bucket = "cueboxbucket119087"
+#}
+
 data "aws_s3_bucket_policy" "bucket_policy"{
-  bucket = "cueboxbucket119087"
+  bucket = var.config["aws_s3_bucket"]
 }
 
 resource "aws_iam_role" "cross_account_role" {
