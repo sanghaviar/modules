@@ -2,8 +2,8 @@ data "databricks_aws_assume_role_policy" "assume_role_policy" {
   external_id = var.ACCOUNT_ID
 }
 
-data "databricks_aws_crossaccount_policy" "aws_crossaccount_policy" {
-}
+#data "databricks_aws_crossaccount_policy" "aws_crossaccount_policy" {
+#}
 
 #data "aws_s3_bucket_policy" "bucket_policy"{
 #  bucket = "cueboxbucket119087"
