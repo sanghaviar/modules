@@ -3,8 +3,12 @@ data "aws_iam_role" "this" {
   name = var.config["iam_role_name"]
 }
 
+#data "aws_s3_bucket" "metastore"{
+#  bucket = "cueboxbucket119087"
+#}
+
 data "aws_s3_bucket" "metastore"{
-  bucket = "cueboxbucket119087"
+  bucket = var.config["aws_s3_bucket_name"]
 }
 
 resource "aws_vpc" "vpc" {

@@ -1,7 +1,9 @@
+#data "aws_iam_role" "role" {
+#  name = "cuebox_roleeeeee"
+#}
 data "aws_iam_role" "role" {
-  name = "cuebox_roleeeeee"
+  name = var.config["aws_iam_role_name"]
 }
-
 resource "aws_kms_key" "kms_key" {
   key_usage = lookup(var.config,"key_usage",null)
   customer_master_key_spec = lookup(var.config,"customer_master_key_spec",null)
@@ -17,6 +19,7 @@ resource "aws_kms_alias" "kms_name" {
 }
 
 resource "aws_kms_key_policy" "key_policy" {
+  count = var.config["create_kms_policy"]
   depends_on = [aws_kms_key.kms_key]
   key_id = aws_kms_key.kms_key.id
   policy = jsonencode(jsondecode(file("config/${var.config["kms_policy_filename"]}")))

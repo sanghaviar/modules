@@ -1,5 +1,9 @@
+#data "databricks_aws_bucket_policy" "this" {
+#  bucket = "cueboxbucket119087"
+#}
+
 data "databricks_aws_bucket_policy" "this" {
-  bucket = "cueboxbucket119087"
+  bucket = var.config["aws_s3_bucket_name"]
 }
 
 resource "aws_s3_bucket" "root_storage_bucket" {
