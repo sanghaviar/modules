@@ -10,6 +10,7 @@ resource "aws_kms_key" "kms_key" {
   bypass_policy_lockout_safety_check = lookup(var.config,"bypass_policy_lockout_safety_check",null )
   deletion_window_in_days = lookup(var.config,"deletion_window_in_days",null)
   is_enabled = lookup(var.config,"is_enabled",null )
+  tags = lookup(var.config,"tags",{} )
 }
 
 resource "aws_kms_alias" "kms_name" {

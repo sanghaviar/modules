@@ -16,6 +16,7 @@ data "databricks_aws_assume_role_policy" "assume_role_policy" {
 resource "aws_iam_role" "cross_account_role" {
   name = var.config["aws_iam_role_name"]
   assume_role_policy = data.databricks_aws_assume_role_policy.assume_role_policy.json
+  tags = lookup(var.config,"tags",{} )
 }
 #
 #resource "aws_iam_role_policy" "role_policy" {

@@ -78,6 +78,7 @@ resource "databricks_mws_workspaces" "workspace" {
   credentials_id = databricks_mws_credentials.credentials.credentials_id
   storage_configuration_id = databricks_mws_storage_configurations.storage_configurations.storage_configuration_id
   network_id = databricks_mws_networks.mws_networks.network_id
+
 }
 
 resource "databricks_metastore" "DBmetastore" {
